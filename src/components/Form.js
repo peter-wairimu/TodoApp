@@ -1,11 +1,25 @@
-import React from 'react'
+import React, {useState} from 'react'
 
 
 const Form = (props) => {
-    function handleSubmit(e) {
-        e.preventDefault();
-        props.addTask("hello peter chege")
-    }
+
+const [name, setName] = useState('')
+
+const handleSubmit = (e) => {
+
+    e.preventDefault();
+    props.addTask(name)
+    setName("")
+
+}
+
+const handleChange = (e) => {
+    setName(e.target.value)
+
+}
+
+
+
   return (
     <form onSubmit={handleSubmit}>
     <h2 className="label-wrapper">
@@ -19,6 +33,8 @@ const Form = (props) => {
       className="input input__lg"
       name="text"
       autoComplete="off"
+      value={name}
+      onChange={handleChange}
     />
     <button type="submit" className="btn btn__primary btn__lg">
       Add
