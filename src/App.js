@@ -2,15 +2,52 @@ import './App.css';
 import Todo from './components/Todo';
 import Form from './components/Form';
 import FilterButton from './components/FilterButton';
+import React, {useState} from 'react';
+import { nanoid} from "nanoid"
 
-function addTask(name) {
-  alert(name);
-}
+
 
 
 function App(props) {
 
-const taskList = props.tasks?.map((task) => <Todo key={task.id} name = {task.name} completed = {task.completed} />)
+const [tasks, setTasks] = useState(props.tasks); 
+
+ 
+function addTask(name) {
+    const newTask = {id: `todo-${nanoid}`, name, completed: false};
+    setTasks([...tasks, newTask])
+  }
+
+
+const toggleTaskCompleted = (id) => {
+  const updatedTasks = tasks.map((task) => {
+    if (id === task.id){
+      return {...task, completed: !task.completed}
+    }
+    return task;
+  });
+  setTasks(updatedTasks);
+
+}
+
+const taskList = tasks.map((task) => (
+  <Todo
+      id={task.id}
+      name={task.name}
+      completed={task.completed}
+      key={task.id}
+      toggleTaskCompleted={toggleTaskCompleted}
+  />
+));
+
+
+
+const tasksNoun = taskList.length !== 1 ? 'tasks' : 'task';
+
+const headingText = `${taskList.length} ${tasksNoun} remaining`
+
+
+
 
   return (
     <div className="todoapp stack-large">
@@ -24,10 +61,9 @@ const taskList = props.tasks?.map((task) => <Todo key={task.id} name = {task.nam
 
       </div>
       <h2 id="list-heading">
-        3 tasks remaining
+        {headingText}
       </h2>
       <ul
-        role="list"
         className="todo-list stack-large stack-exception"
         aria-labelledby="list-heading"
       >
